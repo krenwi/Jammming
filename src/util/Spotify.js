@@ -24,7 +24,7 @@ const Spotify = {
   },
 
   search(term) {
-    const accessToken = Spotify.getAccessToken()
+    let accessToken = Spotify.getAccessToken()
     return fetch(`https://api.spotify.com/v1/search?type=track&q=${term}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`
@@ -38,7 +38,7 @@ const Spotify = {
       return jsonResponse.tracks.items.map(track => ({
         id: track.id,
         name: track.name,
-        artists: track.artists[0].name,
+        artist: track.artists[0].name,
         album: track.album.name,
         uri: track.uri
       })) 
@@ -49,22 +49,23 @@ const Spotify = {
     if (!name || !trackURIs.length) {
       return
     }
-    const accessToken = Spotify.getAccessToken()
+    let accessToken = Spotify.getAccessToken()
     const headers = { Authorization: `Bearer ${accessToken}` }
     let userID
-    return fetch(`https://api.spotify.com/v1/me`, { headers: headers }
-    ).then(response => response.json()
-    ).then(jsonResponse => {
+    return fetch(`https://api.spotify.com/v1/me`, { headers: headers })
+    .then(response => response.json())
+    .then(jsonResponse => {
       userID = jsonResponse.id
       return fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, 
         {
           headers: headers,
           method: 'POST',
           body: JSON.stringify({ name: name })
-        }).then(response => response.json()
-        ).then(jsonResponse => {
+        })
+        .then(response => response.json())
+        .then(jsonResponse => {
           const playlistID = jsonResponse.id
-          return fetch(`/v1/users/${userID}/playlists/${playlistID}/tracks`, 
+          return fetch(`https://api.spotify.com/v1/users/${userID}/playlists/${playlistID}/tracks`, 
             {
               headers: headers,
               method: 'POST',
@@ -74,6 +75,5 @@ const Spotify = {
     })
   }
 }
-
 
 export default Spotify

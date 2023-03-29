@@ -1,7 +1,7 @@
 import React from "react";
 import "./SearchBar.css"
 
-export class SearchBar extends React.Component {
+class SearchBar extends React.Component {
   constructor(props) {
     super(props)
 
@@ -25,8 +25,10 @@ export class SearchBar extends React.Component {
     return (
       <div className="SearchBar">
         <input onChange={this.handleTermChange} placeholder="Enter A Song, Album, or Artist" />
-        <button className="SearchButton">SEARCH</button>
+        <button className="SearchButton" onClick={this.search}>SEARCH</button>
       </div>
     )
   }
 }
+
+export default SearchBar
